@@ -37,10 +37,11 @@ def main():
         a_name, a_diet, a_location, a_type = get_data_from_file(animal)
         data = {"Name": a_name, "Diet": a_diet, "Location": a_location,
                 "Type": a_type}
+        output += '<li class="cards__item">'
         for label, value in data.items():
             if value:
-                output += f"{label}: {value}\n"
-        output += "\n"
+                output += f"{label}: {value}<br/>\n"
+        output += "</li>\n"
     html_data = read_html_template("animals_template.html")
     html_new_data = html_data.replace("__REPLACE_ANIMALS_INFO__", output)
     write_new_html(html_new_data)
