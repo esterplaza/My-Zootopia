@@ -46,11 +46,16 @@ def serialize_animal(animal_obj):
     output += '<li class="cards__item">\n'
     a_name, data = get_data_from_file(animal_obj)
     output += f'<div class ="card__title"> {a_name} </div>\n'
-    output += '<p class="card__text">\n'
+    output += '<div class="card__text">\n'
+    output += '<ul style="margin-top: 20px; font-size: 16px">'
     for label, value in data.items():
         if value:
-            output += f"<strong>{label}:</strong> {value}<br/>\n"
-    output += "</p>\n"
+            output += (
+                f'<li style="list-style-type: square; line-height: '
+                f'2.5"><strong>{label}:</strong> {value}</li>\n'
+            )
+    output += "</ul>\n"
+    output += "</div>\n"
     output += "</li>\n"
     return output
 
