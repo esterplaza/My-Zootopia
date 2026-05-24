@@ -23,27 +23,43 @@ def get_data_from_file(animal):
     """gets the value of the fields name, diet, first location and type from
     one animal of the animal data"""
     animal_name = animal.get("name")
+    animal_taxonomy = animal.get("taxonomy")
+    animal_scientific_name = animal_taxonomy.get("scientific_name")
     animal_characteristics = animal.get("characteristics")
     animal_diet = animal_characteristics.get("diet")
+    animal_slogan = animal_characteristics.get("slogan")
     animal_location = animal.get("locations")[0]
     animal_type = animal_characteristics.get("type")
-    return animal_name, animal_diet, animal_location, animal_type
+    dict_data = {
+        "Scientific name": animal_scientific_name,
+        "Diet": animal_diet,
+        "Location": animal_location,
+        "Type": animal_type,
+        "Slogan": animal_slogan,
+    }
+    return animal_name, dict_data
+
+
+def serialize_animal(animal_obj):
+    """creates a html card for an item"""
+    output = ""
+    output += '<li class="cards__item">\n'
+    a_name, data = get_data_from_file(animal_obj)
+    output += f'<div class ="card__title"> {a_name} </div>\n'
+    output += '<p class="card__text">\n'
+    for label, value in data.items():
+        if value:
+            output += f"<strong>{label}:</strong> {value}<br/>\n"
+    output += "</p>\n"
+    output += "</li>\n"
+    return output
 
 
 def main():
     animals_data = load_data("animals_data.json")
     output = ""
     for animal in animals_data:
-        output += '<li class="cards__item">\n'
-        a_name, a_diet, a_location, a_type = get_data_from_file(animal)
-        output += f'<div class ="card__title"> {a_name} </div>\n'
-        output += '<p class="card__text">\n'
-        data = {"Diet": a_diet, "Location": a_location, "Type": a_type}
-        for label, value in data.items():
-            if value:
-                output += f"<strong>{label}:</strong> {value}<br/>\n"
-        output += "</p>\n"
-        output += "</li>\n"
+        output += serialize_animal(animal)
     html_data = read_html_template("animals_template.html")
     html_new_data = html_data.replace("__REPLACE_ANIMALS_INFO__", output)
     write_new_html(html_new_data)
